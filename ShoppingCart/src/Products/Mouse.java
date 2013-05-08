@@ -12,7 +12,7 @@ public class Mouse extends Product {
 		this.description = description;
 		this.dpi = dpi;
 		this.numButtons = numButtons;
-		this.wireless = wireless;
+		this.wireless = wireless; 	
 	}
 
 	public String getDescription() {
