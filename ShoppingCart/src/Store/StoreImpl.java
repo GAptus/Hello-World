@@ -109,11 +109,11 @@ public class StoreImpl implements Store {
 		}
 
 		public boolean removeBasket(Product p) {
-			
+			return true;
 		}
 
 		public boolean checkoutBasket() {
-
+			return true;
 		}
 		
 		

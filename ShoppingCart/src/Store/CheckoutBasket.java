@@ -6,7 +6,7 @@ public interface CheckoutBasket {
 	
 	public void addToBasket(Product p);
 	
-	public boolean removeBasket(Product p);
+	public boolean removeFromBasket(Product p);
 	
 	public boolean checkoutBasket();
 }
