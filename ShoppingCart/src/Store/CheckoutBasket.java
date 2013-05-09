@@ -1,5 +1,7 @@
 package Store;
 
+import java.io.IOException;
+
 import Products.*;
 
 public interface CheckoutBasket {
@@ -8,5 +10,5 @@ public interface CheckoutBasket {
 	
 	public boolean removeFromBasket(Product p);
 	
-	public boolean checkoutBasket();
+	public void checkoutBasket() throws IOException;
 }

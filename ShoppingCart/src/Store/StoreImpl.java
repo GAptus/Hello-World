@@ -1,6 +1,9 @@
 package Store;
 
 import Products.*;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class StoreImpl implements Store {
@@ -104,16 +107,28 @@ public class StoreImpl implements Store {
 		Set<Product> basketList = new HashSet<Product>();
 
 		public void addToBasket(Product p) {
-			
 			basketList.add(p);
 		}
 
-		public boolean removeBasket(Product p) {
-			return true;
+		public void checkoutBasket() throws IOException {
+			FileWriter fw = new FileWriter("Receipt");
+			
+			for (Product p : basketList) {
+				fw.write(p.getProductName() + "   " + p.getProductPrice());
+			}
+			
+			fw.close();
 		}
 
-		public boolean checkoutBasket() {
-			return true;
+		public boolean removeFromBasket(Product p) {
+			
+			for (Product removeP : basketList) {
+				if (p.equals(removeP)) {
+					basketList.remove(removeP);
+					return true;
+				}
+			}
+			return false;
 		}
 		
 		
