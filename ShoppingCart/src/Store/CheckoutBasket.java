@@ -1,10 +1,12 @@
 package Store;
 
+import Products.*;
+
 public interface CheckoutBasket {
 	
-	public void addToBasket();
+	public void addToBasket(Product p);
 	
-	public boolean removeBasket();
+	public boolean removeBasket(Product p);
 	
 	public boolean checkoutBasket();
 }

@@ -99,4 +99,23 @@ public class StoreImpl implements Store {
 		
 		return allKeywordMatches;
 	}	
+	
+	class Basket implements CheckoutBasket {
+		Set<Product> basketList = new HashSet<Product>();
+
+		public void addToBasket(Product p) {
+			
+			basketList.add(p);
+		}
+
+		public boolean removeBasket(Product p) {
+			
+		}
+
+		public boolean checkoutBasket() {
+
+		}
+		
+		
+	}
 }
