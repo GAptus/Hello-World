@@ -1,4 +1,4 @@
-package Products;
+package Store;
 
 public abstract class Product {
 	

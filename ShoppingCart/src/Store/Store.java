@@ -1,5 +1,6 @@
 package Store;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public interface Store {

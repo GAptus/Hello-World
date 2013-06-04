@@ -1,14 +1,22 @@
 package Store;
 
-import Products.*;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
 public class StoreImpl implements Store {
 	
-	private Set<Product> productsForSale = new HashSet<Product>();
+	private List<Product> productsForSale = new ArrayList<Product>();
+	
+	public void stock() {
+		StockingStore stockMyStore = new StockingStore();
+		
+		productsForSale.addAll(stockMyStore.readItemsFromFile("Desktops", "Desktop"));
+		productsForSale.addAll(stockMyStore.readItemsFromFile("Keyboards", "Keyboard"));
+		productsForSale.addAll(stockMyStore.readItemsFromFile("Laptops", "Laptop"));
+		productsForSale.addAll(stockMyStore.readItemsFromFile("Mice", "Mouse"));
+		productsForSale.addAll(stockMyStore.readItemsFromFile("Monitors", "Monitor"));
+	}
 	
 	public ArrayList<String> displayAllProducts() {
 		
@@ -101,10 +109,19 @@ public class StoreImpl implements Store {
 		}
 		
 		return allKeywordMatches;
-	}	
+	}
+	
+	public Product searchByProductNumber(String productNumber) throws ProductDoesNotExistException {
+			for (Product p : productsForSale) {
+				if (p.getProductNumber().equals(productNumber)) {
+					return p;
+				}
+			}
+			throw new ProductDoesNotExistException();
+	}
 	
 	class Basket implements CheckoutBasket {
-		Set<Product> basketList = new HashSet<Product>();
+		List<Product> basketList = new ArrayList<Product>();
 
 		public void addToBasket(Product p) {
 			basketList.add(p);
