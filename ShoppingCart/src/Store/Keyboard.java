@@ -11,7 +11,7 @@ public class Keyboard extends Product {
 		this.size  = size;
 		this.connectivity = connectivity;
 		this.description = "Product Number: " + super.getProductNumber() + "\n"
-							+ super.getProductName() + "------" + super.getProductPrice() + "\n"
+							+ super.getProductName() + "         " + "£" + super.getProductPrice() + "\n"
 							+ "Size: " + size + "\n"
 							+ "Connectivity: " + connectivity;
 	}

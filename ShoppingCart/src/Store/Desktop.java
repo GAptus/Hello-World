@@ -10,15 +10,16 @@ public class Desktop extends Product {
 	private int ramSize;
 	private int hardDriveSize;
 	
-	public Desktop(String number, String name, double price, int numUSBPorts, String processor, String graphicsCard, int ramSize, int hardDriveSize) {
+	public Desktop(String number, String name, double price, String size, int numUSBPorts, String processor, String graphicsCard, int ramSize, int hardDriveSize) {
 		super(number, name, price);
+		this.size = size;
 		this.numUSBPorts = numUSBPorts;
 		this.processor = processor;
 		this.graphicsCard = graphicsCard;
 		this.ramSize = ramSize;
 		this.hardDriveSize = hardDriveSize;
 		this.description = "Product Number: " + super.getProductNumber() + "\n"
-						+ super.getProductName() + "--------" + super.getProductPrice() + "\n"
+						+ super.getProductName() + "         " + "£" + super.getProductPrice() + "\n"
 						+ "Number of USB ports: " + numUSBPorts + "\n"
 						+ "Processor: " + processor + "\n"
 						+ "Graphics card: " + graphicsCard + "\n"

@@ -9,7 +9,7 @@ public class Laptop extends Product {
 	private int numUSBPorts;
 	private String processor;
 	
-	public Laptop(String number, String name, double price, String description, double weight,
+	public Laptop(String number, String name, double price, double weight,
 			double screenSize, int hardDriveSize, int numUSBPorts, String processor) {
 		super(number, name, price);
 		this.weight = weight;
@@ -18,7 +18,7 @@ public class Laptop extends Product {
 		this.numUSBPorts = numUSBPorts;
 		this.processor = processor;
 		this.description = "Product Number: " + super.getProductNumber() + "\n"
-						+ super.getProductName() + "-------" + super.getProductPrice() + "\n"
+						+ super.getProductName() + "         " + "£" + super.getProductPrice() + "\n"
 						+ "Weight(Kg): " + weight + "\n"
 						+ "Screen size (inches): " + screenSize + "\n"
 						+ "Hard Drive (Gb): " + hardDriveSize + "\n"

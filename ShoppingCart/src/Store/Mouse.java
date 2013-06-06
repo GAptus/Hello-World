@@ -13,7 +13,7 @@ public class Mouse extends Product {
 		this.numButtons = numButtons;
 		this.connectivity = connectivity; 
 		this.description = "Product Number: " + super.getProductNumber() + "\n"
-							+ super.getProductName() + "-------" + super.getProductPrice() + "\n"
+							+ super.getProductName() + "         " + "£" + super.getProductPrice() + "\n"
 							+ "DPI: " + dpi + "\n"
 							+ "Number of buttons: " + numButtons + "\n"
 							+ "Connectivity: " + connectivity;

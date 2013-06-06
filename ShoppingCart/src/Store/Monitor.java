@@ -15,7 +15,7 @@ public class Monitor extends Product {
 		this.aspectRatio = aspectRatio;
 		this.numUSBPorts = numUSBPorts;
 		this.description = "Product Number: " + super.getProductNumber() + "\n"
-							+ super.getProductName() + "--------" + super.getProductPrice() + "\n"
+							+ super.getProductName() + "         " + "£" + super.getProductPrice() + "\n"
 							+ "Screen size(inches): " + screenSize + "\n"
 							+ "Resolution: " + resolution + "\n"
 							+ "Aspect ration: " + aspectRatio + "\n"

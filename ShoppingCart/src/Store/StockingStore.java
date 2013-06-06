@@ -21,10 +21,10 @@ public class StockingStore {
 		}
 		finally {
 			try {
-				while (br.readLine() != null) {
-					String lineRead = br.readLine();
+				String lineRead;
+				while ((lineRead = br.readLine()) != null) {
 					String[] parts = lineRead.split(",");
-					
+
 					try {
 						linesFromFile.add(createProducts(parts, productType));
 					} catch (ProductDoesNotExistException e) {
@@ -46,15 +46,15 @@ public class StockingStore {
 	private Product createProducts(String[] p, String productType) throws ProductDoesNotExistException {
 		if (productType.equals("Desktop")) {
 			try {
-				return new Desktop(p[0], p[1], Double.parseDouble(p[2]), Integer.parseInt(p[3])
-							, p[4], p[5], Integer.parseInt(p[6]), Integer.parseInt(p[6]));
+				return new Desktop(p[0], p[1], Double.parseDouble(p[2]), p[3], Integer.parseInt(p[4])
+							, p[5], p[6], Integer.parseInt(p[7]), Integer.parseInt(p[7]));
 			} catch (NumberFormatException e) {
-				System.err.println("Problem with Desktop file! Check the numbers!");
+				System.err.println("Problem converting numbers in Desktop file! Check the numbers!");
 			}
 		}
 		if (productType.equals("Laptop")) {
 			try {
-				return new Laptop(p[0], p[1], Double.parseDouble(p[2]),p[3], Double.parseDouble(p[4]), Double.parseDouble(p[5]), Integer.parseInt(p[6]), Integer.parseInt(p[7]), p[8]);
+				return new Laptop(p[0], p[1], Double.parseDouble(p[2]), Double.parseDouble(p[3]), Double.parseDouble(p[4]), Integer.parseInt(p[5]), Integer.parseInt(p[6]), p[7]);
 			} catch (NumberFormatException e) {
 				System.err.println("Problem with the Laptop file! Check the numbers!");
 			}

@@ -8,7 +8,11 @@ public class StoreImpl implements Store {
 	
 	private List<Product> productsForSale = new ArrayList<Product>();
 	
-	public void stock() {
+	public StoreImpl() {
+		stock();
+	}
+	
+	private void stock() {
 		StockingStore stockMyStore = new StockingStore();
 		
 		productsForSale.addAll(stockMyStore.readItemsFromFile("Desktops", "Desktop"));
@@ -18,7 +22,44 @@ public class StoreImpl implements Store {
 		productsForSale.addAll(stockMyStore.readItemsFromFile("Monitors", "Monitor"));
 	}
 	
-	public ArrayList<String> displayAllProducts() {
+	public ArrayList<String> findProductsByOption(String option) throws ProductDoesNotExistException {
+		if (option.equals("Desktops")) {
+			return displayDesktops();
+		}
+		if (option.equals("Laptops")) {
+			return displayLaptops();
+		}
+		if (option.equals("Monitors")) {
+			return displayMonitors();
+		}
+		if (option.equals("Keyboards")) {
+			return displayKeyboards();
+		}
+		if (option.equals("Mice")) {
+			return displayMice();
+		}
+		else {
+			throw new ProductDoesNotExistException();
+		}
+	}
+	
+	public ArrayList<String> searchKeyword(String keyword) throws ProductDoesNotExistException {
+		ArrayList<String> productsByKeyword = new ArrayList<String>();
+		
+		for (Product p : productsForSale) {
+			if (p.getDescription().contains(keyword)) {
+				productsByKeyword.add(p.getDescription());
+			}
+		}
+		
+		if (productsByKeyword.size() == 0) {
+			throw new ProductDoesNotExistException();
+		}
+		
+		return productsByKeyword;
+	}
+	
+	private ArrayList<String> displayAllProducts() {
 		
 		ArrayList<String> allProducts = new ArrayList<String>();
 		
@@ -29,7 +70,7 @@ public class StoreImpl implements Store {
 		return allProducts;
 	}
 
-	public ArrayList<String> displayMonitors() {
+	private ArrayList<String> displayMonitors() {
 		
 		ArrayList<String> allMonitor = new ArrayList<String>();
 		
@@ -43,7 +84,7 @@ public class StoreImpl implements Store {
 		return allMonitor;
 	}
 
-	public ArrayList<String> displayLaptops() {
+	private ArrayList<String> displayLaptops() {
 		
 		ArrayList<String> allLaptops = new ArrayList<String>();
 		
@@ -57,7 +98,7 @@ public class StoreImpl implements Store {
 		return allLaptops;
 	}
 
-	public ArrayList<String> displayDesktops() {
+	private ArrayList<String> displayDesktops() {
 		
 		ArrayList<String> allDesktops = new ArrayList<String>();
 		
@@ -65,13 +106,14 @@ public class StoreImpl implements Store {
 			if (p instanceof Desktop) {
 				Desktop d = (Desktop) p;
 				allDesktops.add(d.getDescription());
+				System.out.println(d.getDescription());
 			}
 		}
 		
 		return allDesktops;
 	}
 
-	public ArrayList<String> displayKeyboards() {
+	private ArrayList<String> displayKeyboards() {
 		
 		ArrayList<String> allKeyboards = new ArrayList<String>();
 		
@@ -85,7 +127,7 @@ public class StoreImpl implements Store {
 		return allKeyboards;
 	}
 
-	public ArrayList<String> displayMice() {
+	private ArrayList<String> displayMice() {
 		
 		ArrayList<String> allMice = new ArrayList<String>();
 		
@@ -98,20 +140,8 @@ public class StoreImpl implements Store {
 		
 		return allMice;
 	}
-
-	public ArrayList<String> searchKeyword(String keyword) {
-		
-		ArrayList<String> allKeywordMatches = new ArrayList<String>();
-		
-		for (Product p : productsForSale) {
-			if (p.getDescription().contains(keyword));
-				allKeywordMatches.add(p.getDescription());
-		}
-		
-		return allKeywordMatches;
-	}
 	
-	public Product searchByProductNumber(String productNumber) throws ProductDoesNotExistException {
+	private Product searchByProductNumber(String productNumber) throws ProductDoesNotExistException {
 			for (Product p : productsForSale) {
 				if (p.getProductNumber().equals(productNumber)) {
 					return p;
@@ -120,7 +150,7 @@ public class StoreImpl implements Store {
 			throw new ProductDoesNotExistException();
 	}
 	
-	class Basket implements CheckoutBasket {
+	public class Basket implements CheckoutBasket {
 		List<Product> basketList = new ArrayList<Product>();
 
 		public void addToBasket(Product p) {
@@ -148,6 +178,13 @@ public class StoreImpl implements Store {
 			return false;
 		}
 		
-		
+		public ArrayList<String> printOutBasket() {
+			ArrayList<String> basketContains = new ArrayList<String>();
+			
+			for (Product p : basketList) {
+				basketContains.add(p.getDescription());
+			}
+			return basketContains;
+		}
 	}
 }
