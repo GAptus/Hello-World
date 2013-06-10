@@ -7,10 +7,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
-import Store.StoreImpl.Basket;
 
 /**
  * 
@@ -18,29 +24,37 @@ import Store.StoreImpl.Basket;
  *Class SwingBuilder
  *A Class which provides a series of methods to build a gui for the OOP Shopping cart project
  */
+//SATISFIES ASSESSMENT CRITERIA 1.1
 public class SwingBuilder {
+	// SATISFIES ASSESSMENT CRITERIA 1.2
 	// Instantiates the store class to access its methods
-	Store store = new StoreImpl();
+	Store store = StoreImpl.getStore();
 	
-	Basket basket = store.new CheckoutBasket();
+	CheckoutBasket basket = store.getBasketInstance();
 	
 	// Initialises global JFrame objects used in various buildFrame methods
-	JFrame welcomeFrame;
-	JFrame indexFrame;
-	JFrame searchFrame;
-	JFrame displayFrame;
-	JFrame keywordsFrame;
-	JFrame buyFrame;
+	private JFrame welcomeFrame;
+	private JFrame indexFrame;
+	private JFrame displayFrame;
+	private JFrame buyFrame;
+	private JFrame showBasketFrame; 
+	private JFrame removeFromBasketFrame;
 	// Initialises global JPanel - used in itemStateChanged and buildBuyOptionsFrame
-	JPanel storagePanel;
+	private JPanel storagePanel;
+	
+	private String tempString;
+	
 	// String & Integer arrays containing information for JComboBox's created
-	String[] displayChoices = {"Desktops", "Laptops", "Monitors", "Keyboards", "Mice"};
-	String[] buyOptionsDesktop = {"HP h8-1590ea: £1029.99", "HP Pavilion p6-2496ea: 749.99", "HP Pavilion p6-2422ea: £269.99"};
-	String[] buyOptionsKeyBoard = {"Razer BlackWidow: £99.99", "Logitech K800: £82.99", "Razer Anansi: £89.99"};
-	String[] buyOptionsLaptop = {"Sony Vaio S Series: £529.99", "Toshiba Satellite: £929.99"};
-	String[] buyOptionsMonitors = {"Dell UltraSharp U2312HM: £238.80", "Dell UltraSharp U2412M: £322.80"};
-	String[] buyOptionsMice = {"Razer Naga Epic: £119.99", "Razer Naga Hex: £99.99", "Razer Ouroboros Elite: £109.99"};
-	Integer[] quantity = {1,2,3,4,5,6,7,8,9,10};
+	private String[] displayChoices = {"Desktops", "Laptops", "Monitors", "Keyboards", "Mice"};
+	
+	HashMap<String, BuildBuyCardPanel> cardMap = new HashMap<String, BuildBuyCardPanel>();
+	
+	private BuildBuyCardPanel card1;
+	private BuildBuyCardPanel card2;
+	private BuildBuyCardPanel card3;
+	private BuildBuyCardPanel card4;
+	private BuildBuyCardPanel card5;
+	
 	/**
 	 * Method - buildWelcomeFrame
 	 * @return A JFrame which will be the welcome frame
@@ -80,8 +94,12 @@ public class SwingBuilder {
 		
 		return welcomeFrame;
 	}
-	
-	public JFrame buildIndexFrame() {
+	/**
+	 * Method buildIndexFrame
+	 * @return JFrame containing all the content required for the index frame
+	 * Builds and returns a JFrame which contains all the information required for the index page
+	 */
+	private JFrame buildIndexFrame() {
 		indexFrame = new JFrame("Please pick a option!");
 		
 		JPanel indexPanel = new JPanel();
@@ -91,68 +109,57 @@ public class SwingBuilder {
 		final JComboBox<String> displayOptions = new JComboBox<String>(displayChoices);
 		final JButton buyButton = new JButton("Click here to buy");
 		
-		
+		final JButton showBasketButton = new JButton("View Basket");
+		// Adding a action listener for the buy button
 		buyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				indexFrame.dispose();
-				buildBuyOptionsFrame();
+				try {
+					buildBuyOptionsFrame();
+				} catch (ProductDoesNotExistException e1) {
+					JOptionPane.showMessageDialog(indexFrame, "The product selected does not exist");
+				}
 			}
 		});
-	
-		
+		// Adding a action listener for the display all button
 		displayAllButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				indexFrame.dispose();
 				try {
 					displaySelected(displayOptions.getSelectedItem().toString());
 				} catch (ProductDoesNotExistException e1) {
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(indexFrame, "The product selected does not exist");
 				}
+			}
+		});
+		// Adding a action listener for the show basket button
+		showBasketButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				indexFrame.dispose();
+				buildShowBasketFrame();
 			}
 		});
 		
 		indexPanel.add(displayOptions);
 		indexPanel.add(displayAllButton);
 		indexPanel.add(buyButton);
+		indexPanel.add(showBasketButton);
 		
 		indexFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		indexFrame.setSize(240, 100);
+		indexFrame.setSize(240, 140);
 		indexFrame.setResizable(false);
 		indexFrame.setVisible(true);
 		
 		indexFrame.getContentPane().add(indexPanel);
 		
 		return indexFrame;
-	}
-	
-	public JPanel buildNewOptions(String option) {
-		JPanel card = new JPanel();
-		JComboBox<Integer> quantityList = new JComboBox<Integer>(quantity);
-		JComboBox<String> optionsList = null;
-		
-		if (option.equals("Desktops")) {
-			optionsList = new JComboBox<String>(buyOptionsDesktop);
-		}
-		if (option.equals("Laptops")) {
-			optionsList = new JComboBox<String>(buyOptionsLaptop);
-		}
-		if (option.equals("Monitors")) {
-			optionsList = new JComboBox<String>(buyOptionsMonitors);
-		}
-		if (option.equals("Keyboards")) {
-			optionsList = new JComboBox<String>(buyOptionsKeyBoard);
-		}
-		if (option.equals("Mice")) {
-			optionsList = new JComboBox<String>(buyOptionsMice);
-		}
-		
-		card.add(optionsList);
-		card.add(quantityList);
-		
-		return card;
-	}
-	
-	public JFrame buildBuyOptionsFrame() {
+	}	
+	/**
+	 * Method buildBuyOptionsFrame
+	 * @return A JFrame containing all the information for the Buying frame
+	 * @throws ProductDoesNotExistException
+	 */
+	private JFrame buildBuyOptionsFrame() throws ProductDoesNotExistException {
 		
 		BorderLayout layout = new BorderLayout();
 		
@@ -166,13 +173,23 @@ public class SwingBuilder {
 		
 		final JComboBox<String> buyOptions = new JComboBox<String>(displayChoices);
 		
+		tempString = buyOptions.getItemAt(0);
 		
-		
-		JPanel card1 = buildNewOptions("Desktops");
-		JPanel card2 = buildNewOptions("Laptops");
-		JPanel card3 = buildNewOptions("Monitors");
-		JPanel card4 = buildNewOptions("Keyboards");
-		JPanel card5 = buildNewOptions("Mice");
+		try {
+			card1 = new BuildBuyCardPanel(store.findProductsByOption(DESKTOPS));
+			card2 = new BuildBuyCardPanel(store.findProductsByOption(LAPTOPS));
+			card3 = new BuildBuyCardPanel(store.findProductsByOption(MONITORS));
+			card4 = new BuildBuyCardPanel(store.findProductsByOption(KEYBOARDS));
+			card5 = new BuildBuyCardPanel(store.findProductsByOption(MICE));
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(buyFrame, "Some kind of error :S");
+		}
+		// Using a card layout to change the information in the second combo box based on the currently selected option in the first combo box
+		cardMap.put(DESKTOPS, card1);
+		cardMap.put(LAPTOPS, card2);
+		cardMap.put(MONITORS, card3);
+		cardMap.put(KEYBOARDS, card4);
+		cardMap.put(MICE, card5);
 		
 		storagePanel = new JPanel(new CardLayout());
 		storagePanel.add(card1, DESKTOPS);
@@ -180,23 +197,39 @@ public class SwingBuilder {
 		storagePanel.add(card3, MONITORS);
 		storagePanel.add(card4, KEYBOARDS);
 		storagePanel.add(card5, MICE);
-		
+
+		// Adding a item listener to the first JComboBox to check for changes in the selected option
 		buyOptions.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				CardLayout c1 = (CardLayout)(storagePanel.getLayout());
 				c1.show(storagePanel, (String)e.getItem());
+				tempString = (String)e.getItem();
 			}
 		});
 		
 		JPanel buttonPanel = new JPanel();
 		
 		JButton addToBasket = new JButton("Add to basket");
-		
-//		addToBasket.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				store.
-//			}		
-//		});
+		// Adding a action listener to the add to basket button
+		addToBasket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					basket.addToBasket(cardMap.get(tempString).getSelected(), cardMap.get(tempString).getQuantity());
+				}
+				catch (ProductDoesNotExistException e1) {
+					JOptionPane.showMessageDialog(buyFrame, "The product does not exist");
+				}
+				finally {
+					try {
+						String output = cardMap.get(tempString).getQuantity() + " " + cardMap.get(tempString).getSelected().getProductName();
+						JOptionPane.showMessageDialog(buyFrame, output);
+					}
+					catch (ProductDoesNotExistException e2) {
+						JOptionPane.showMessageDialog(buyFrame, "The product does not exist");
+					}
+				}
+			}		
+		});
 		
 		JButton returnButton = createReturnButton(buyFrame);
 		
@@ -208,7 +241,7 @@ public class SwingBuilder {
 		buyFrame.getContentPane().add(buyOptions, BorderLayout.NORTH);
 		buyFrame.getContentPane().add(storagePanel, BorderLayout.CENTER);
 		buyFrame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-		
+		// Adding a action listener to the add to basket button
 		addToBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JLabel addedMessage = new JLabel("Items have been added!");
@@ -223,17 +256,22 @@ public class SwingBuilder {
 		
 		return buyFrame;
 	}
-	
-	public JFrame displaySelected(String option) throws ProductDoesNotExistException {
+	/**
+	 * Method displaySelected
+	 * @param option String containing the option selected
+	 * @return Jframe containing the results from the selected option
+	 * @throws ProductDoesNotExistException
+	 */
+	private JFrame displaySelected(String option) throws ProductDoesNotExistException {
 		displayFrame = new JFrame(option);
 		JPanel displayPanel = new JPanel();
 		final JButton returnToIndex = createReturnButton(displayFrame);
 		
-		ArrayList<String> tempStore = store.findProductsByOption(option);
+		ArrayList<Product> tempStore = store.findProductsByOption(option);
 		System.out.println(tempStore.size());
-		
+		// Constructs text fields based on the number of results
 		for (int i = 0; i < tempStore.size(); i++) {
-			JTextArea tempArea = new JTextArea(tempStore.get(i), 10, 15);
+			JTextArea tempArea = new JTextArea(tempStore.get(i).getDescription(), 10, 15);
 			tempArea.setEditable(false);
 			displayPanel.add(tempArea);
 		}
@@ -247,10 +285,14 @@ public class SwingBuilder {
 		
 		return displayFrame;
 	}
-	
-	public JButton createReturnButton(final JFrame currentFrame) {
+	/**
+	 * Method createReturnButton
+	 * @param currentFrame JFrame which is the frame to which the button will be added
+	 * @return JButton which will return the user to the index page
+	 */
+	private JButton createReturnButton(final JFrame currentFrame) {
 		JButton returnButton = new JButton("Return to index");
-		
+		// Adding a action listener which will return you to the index page
 		returnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentFrame.dispose();
@@ -260,5 +302,105 @@ public class SwingBuilder {
 		
 		return returnButton;
 	}
-	
+	/**
+	 * Method buildShowBasketFrame
+	 * @return JFrame containing the contents of your basket currently and a few JButtons with various options
+	 */
+	private JFrame buildShowBasketFrame() {
+		showBasketFrame = new JFrame("Your basket");
+		
+		JPanel showBasketPanel = new JPanel();
+		
+		JTextArea basketContents = new JTextArea(basket.printOutBasket(), 20, 15);
+		basketContents.setEditable(false);
+		JButton checkout = new JButton("Checkout");
+		JButton returnToIndex = createReturnButton(showBasketFrame);
+		JButton remove = new JButton("Remove items");
+		
+		checkout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(showBasketFrame, "Printing receipt, Thank you for shopping");
+				showBasketFrame.dispose();
+			}
+		});
+		
+		remove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showBasketFrame.dispose();
+				try {
+					buildRemoveFromBasketFrame();
+				} 
+				catch (EmptyBasketException e1) {
+					JOptionPane.showMessageDialog(showBasketFrame, "Your basket is empty");
+				}
+			}
+		});
+		
+		showBasketPanel.add(basketContents);
+		showBasketPanel.add(checkout);
+		showBasketPanel.add(returnToIndex);
+		showBasketPanel.add(remove);
+		
+		showBasketFrame.getContentPane().add(showBasketPanel);
+		showBasketFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		showBasketFrame.setVisible(true);
+		showBasketFrame.setResizable(false);
+		showBasketFrame.setSize(260, 400);
+		
+		return showBasketFrame;
+	}
+	/**
+	 * Method buildRemoveFromBasketFrame
+	 * @return JFrame containing the options for removing items from your basket
+	 * @throws EmptyBasketException 
+	 */
+	private JFrame buildRemoveFromBasketFrame() throws EmptyBasketException {
+		removeFromBasketFrame = new JFrame("Remove From Basket");
+		
+		JPanel removeFromBasketPanel = new JPanel();
+		
+		final JComboBox<String> removeOptions = new JComboBox<String>(basket.productInBasket());
+		JButton remove = new JButton("Remove");
+		JButton removeAll = new JButton("Remove All");
+		
+		// Setting the default selected option for the removeOptions JComboBox
+		String defaultOption = basket.productInBasket()[0];
+		removeOptions.setSelectedItem(defaultOption);
+		
+		// Adding a action listener for the remove button
+		remove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					// Removes the selected option in the removeOptions JComboBox
+					basket.removeFromBasket(basket.findProduct(removeOptions.getSelectedItem().toString()));
+				}
+				catch (ProductDoesNotExistException e1) {
+					JOptionPane.showMessageDialog(removeFromBasketFrame, "The product does not exist");
+				}
+				finally {
+					removeFromBasketFrame.dispose();
+					buildShowBasketFrame();
+				}
+			}
+		});
+		// Adding a action listener for the remove all button 
+		removeAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				basket.emptyBasket();
+				removeFromBasketFrame.dispose();
+				buildShowBasketFrame();
+			}
+		});
+		
+		removeFromBasketPanel.add(removeOptions);
+		removeFromBasketPanel.add(remove);
+		removeFromBasketPanel.add(removeAll);
+		
+		removeFromBasketFrame.getContentPane().add(removeFromBasketPanel);
+		removeFromBasketFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		removeFromBasketFrame.setVisible(true);
+		removeFromBasketFrame.setSize(280, 140);
+		
+		return removeFromBasketFrame;
+	}
 }

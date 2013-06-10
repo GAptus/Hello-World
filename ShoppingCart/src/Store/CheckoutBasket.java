@@ -1,12 +1,16 @@
 package Store;
-
-import java.io.IOException;
-
+//SATISFIES ASSESSMENT CRITERIA 1.1
 public interface CheckoutBasket {
 	
-	public void addToBasket(Product p);
+	public void addToBasket(Product p, int quantity);
 	
-	public boolean removeFromBasket(Product p);
+	public void removeFromBasket(Product p);
 	
-	public void checkoutBasket() throws IOException;
+	public Product findProduct(String name) throws ProductDoesNotExistException;
+	
+	public String printOutBasket();
+	
+	public String[] productInBasket() throws EmptyBasketException;
+	
+	public void emptyBasket();
 }

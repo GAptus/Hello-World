@@ -1,5 +1,5 @@
 package Store;
-
+// SATISFIES ASSESSMENT CRITERIA 1.1
 public abstract class Product {
 	
 	private String productNumber;

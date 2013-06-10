@@ -1,16 +1,13 @@
 package Store;
-
-import javax.swing.*;
-
+// SATISFIES ASSESSMENT CRITERIA 1.1
 public class StoreTest {
 	
 	public static void main(String[] args) {
 	
-		Store myStore = new StoreImpl();
 
 	
 		SwingBuilder myBuilder = new SwingBuilder();
-		JFrame myFrame = myBuilder.buildWelcomeFrame();
+		myBuilder.buildWelcomeFrame();
 		
 		
 	}

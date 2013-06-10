@@ -1,5 +1,5 @@
 package Store;
-
+//SATISFIES ASSESSMENT CRITERIA 1.1
 public class Keyboard extends Product {
 	
 	private String description;
