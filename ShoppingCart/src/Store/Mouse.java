@@ -1,7 +1,7 @@
 package Store;
 //SATISFIES ASSESSMENT CRITERIA 1.1
 public class Mouse extends Product {
-
+	// SATISFIES ASSESSMENT CRITERIA 1.2
 	private String description;
 	private int dpi;
 	private int numButtons;

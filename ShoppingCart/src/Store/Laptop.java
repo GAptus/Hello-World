@@ -1,7 +1,8 @@
 package Store;
 //SATISFIES ASSESSMENT CRITERIA 1.1
+// SATISFIES ASSESSMENT CRITERIA 2.2 - Inheritance
 public class Laptop extends Product {
-	
+	// SATISFIES ASSESSMENT CRITERIA 1.2
 	private String description;
 	private double weight;
 	private	double screenSize;

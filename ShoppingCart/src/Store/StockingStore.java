@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 // SATISFIES ASSESSMENT CRITERIA 1.1
 public class StockingStore {
-	
 	public ArrayList<Product> readItemsFromFile(String filename, String productType) {
 		FileReader fr = null;
 		BufferedReader br = null;
@@ -16,7 +15,8 @@ public class StockingStore {
 		try {
 			fr = new FileReader(filename);
 			br = new BufferedReader(fr);
-		} catch (FileNotFoundException e) {
+		} 
+		catch (FileNotFoundException e) {
 			System.err.println("The file name entered does not exist or is in the wrong directory");
 		}
 		finally {
@@ -27,7 +27,8 @@ public class StockingStore {
 
 					try {
 						linesFromFile.add(createProducts(parts, productType));
-					} catch (ProductDoesNotExistException e) {
+					} 
+					catch (ProductDoesNotExistException e) {
 						System.err.println("The type of Product entered is either incorrect or does not exist!");
 					}
 

@@ -9,13 +9,13 @@ import javax.swing.JPanel;
 public class BuildBuyCardPanel extends JPanel {
 	// SATISFIES ASSESSMENT CRITERIA 1.2
 	private static final long serialVersionUID = 1L;
-	ArrayList<Product> productOptions = new ArrayList<Product>();
-	Integer[] quantity = {1,2,3,4,5,6,7,8,9,10};
+	private ArrayList<Product> productOptions = new ArrayList<Product>();
+	private Integer[] quantity = {1,2,3,4,5,6,7,8,9,10};
 	
-	DecimalFormat myFormatter = new DecimalFormat("####.00");
+	private DecimalFormat myFormatter = new DecimalFormat("####.00");
 	
-	JComboBox<String> optionsList;
-	JComboBox<Integer> quantityList;
+	private JComboBox<String> optionsList;
+	private JComboBox<Integer> quantityList;
 	
 	BuildBuyCardPanel(ArrayList<Product> a) {
 		super();

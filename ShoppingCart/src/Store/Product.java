@@ -1,7 +1,7 @@
 package Store;
 // SATISFIES ASSESSMENT CRITERIA 1.1
 public abstract class Product {
-	
+	// SATISFIES ASSESSMENT CRITERIA 1.2
 	private String productNumber;
 	private String productName;
 	private double productPrice;

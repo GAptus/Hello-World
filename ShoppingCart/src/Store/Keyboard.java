@@ -1,7 +1,8 @@
 package Store;
 //SATISFIES ASSESSMENT CRITERIA 1.1
+// SATISFIES ASSESSMENT CRITERIA 2.2 - Inheritance
 public class Keyboard extends Product {
-	
+	// SATISFIES ASSESSMENT CRITERIA 1.2
 	private String description;
 	private String size;
 	private String connectivity;

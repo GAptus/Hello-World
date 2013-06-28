@@ -6,6 +6,11 @@ public class StoreTest {
 	
 
 	
+		IndexFrame indexFrame = new IndexFrame();
+		WelcomeFrame welcomeFrame = new WelcomeFrame(indexFrame, helpFrame);
+		HelpFrame helpFrame = new HelpFrame(welcomeFrame);
+		
+		
 		SwingBuilder myBuilder = new SwingBuilder();
 		myBuilder.buildWelcomeFrame();
 		

@@ -1,4 +1,7 @@
 package Store;
+
+import java.io.IOException;
+
 //SATISFIES ASSESSMENT CRITERIA 1.1
 public interface CheckoutBasket {
 	
@@ -13,4 +16,6 @@ public interface CheckoutBasket {
 	public String[] productInBasket() throws EmptyBasketException;
 	
 	public void emptyBasket();
+	
+	public void printReceipt() throws IOException;
 }

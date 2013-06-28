@@ -2,10 +2,14 @@ package Store;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 
@@ -28,9 +33,10 @@ import javax.swing.JTextArea;
 public class SwingBuilder {
 	// SATISFIES ASSESSMENT CRITERIA 1.2
 	// Instantiates the store class to access its methods
-	Store store = StoreImpl.getStore();
-	
-	CheckoutBasket basket = store.getBasketInstance();
+	// SATISFIES ASSESSMENT CRITERIA 2.2 - Polymorphism & Encapsulation
+	private Store store = StoreImpl.getStore();
+	// SATISFIES ASSESSMENT CRITERIA 2.2 - Polymorphism & Encapsulation
+	private CheckoutBasket basket = store.getBasketInstance();
 	
 	// Initialises global JFrame objects used in various buildFrame methods
 	private JFrame welcomeFrame;
@@ -39,6 +45,7 @@ public class SwingBuilder {
 	private JFrame buyFrame;
 	private JFrame showBasketFrame; 
 	private JFrame removeFromBasketFrame;
+	private JFrame helpFrame;
 	// Initialises global JPanel - used in itemStateChanged and buildBuyOptionsFrame
 	private JPanel storagePanel;
 	
@@ -47,7 +54,7 @@ public class SwingBuilder {
 	// String & Integer arrays containing information for JComboBox's created
 	private String[] displayChoices = {"Desktops", "Laptops", "Monitors", "Keyboards", "Mice"};
 	
-	HashMap<String, BuildBuyCardPanel> cardMap = new HashMap<String, BuildBuyCardPanel>();
+	private HashMap<String, BuildBuyCardPanel> cardMap = new HashMap<String, BuildBuyCardPanel>();
 	
 	private BuildBuyCardPanel card1;
 	private BuildBuyCardPanel card2;
@@ -65,11 +72,13 @@ public class SwingBuilder {
 		welcomeFrame = new JFrame("Welcome");
 		// Creating a JPanel 
 		JPanel welcomePanel = new JPanel();
+		welcomePanel.setLayout(new GridLayout(3, 1));
 		
 		// JLabel containing a welcome message
 		JLabel welcomeLabel = new JLabel("Welcome to the store!");
 		// JButton to enter the store
 		JButton enterStoreButton = new JButton("Press to enter store!");
+		JButton helpButton = new JButton("User Help");
 		// Adding a new ActionListener to the JButton enterStoreButton
 		enterStoreButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -78,19 +87,31 @@ public class SwingBuilder {
 				buildIndexFrame();
 			}
 		});
+		
+		
+		enterStoreButton.setToolTipText("Press to enter the store");
+		
+		helpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e1) {
+				try {
+					buildHelpFrame();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		// Adding the two components to a welcomePanel
 		welcomePanel.add(welcomeLabel);
 		welcomePanel.add(enterStoreButton);
-		
-		welcomeFrame.setLayout(new BorderLayout());
-		
-		welcomeFrame.setSize(200, 85);
+		welcomePanel.add(helpButton);
+
 		welcomeFrame.setResizable(false);
 		
 		welcomeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		welcomeFrame.getContentPane().add(welcomePanel, BorderLayout.CENTER);
+		welcomeFrame.getContentPane().add(welcomePanel);
 		welcomeFrame.setVisible(true);
+		welcomeFrame.pack();
 		
 		return welcomeFrame;
 	}
@@ -121,17 +142,22 @@ public class SwingBuilder {
 				}
 			}
 		});
+		buyButton.setToolTipText("Press to go to the buy panel");
+		
 		// Adding a action listener for the display all button
 		displayAllButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				indexFrame.dispose();
 				try {
+					// SATISFIES ASSESSMENT CRITERIA 1.7
 					displaySelected(displayOptions.getSelectedItem().toString());
 				} catch (ProductDoesNotExistException e1) {
 					JOptionPane.showMessageDialog(indexFrame, "The product selected does not exist");
 				}
 			}
 		});
+		displayAllButton.setToolTipText("Press to display the selected products");
+		
 		// Adding a action listener for the show basket button
 		showBasketButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -139,6 +165,7 @@ public class SwingBuilder {
 				buildShowBasketFrame();
 			}
 		});
+		showBasketButton.setToolTipText("Press to view all the contents of your basket");
 		
 		indexPanel.add(displayOptions);
 		indexPanel.add(displayAllButton);
@@ -214,7 +241,9 @@ public class SwingBuilder {
 		addToBasket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					basket.addToBasket(cardMap.get(tempString).getSelected(), cardMap.get(tempString).getQuantity());
+					// SATISFIES ASSESSMENT CRITERIA 1.4
+					basket.addToBasket(cardMap.get(tempString).getSelected(),
+							cardMap.get(tempString).getQuantity());
 				}
 				catch (ProductDoesNotExistException e1) {
 					JOptionPane.showMessageDialog(buyFrame, "The product does not exist");
@@ -230,6 +259,7 @@ public class SwingBuilder {
 				}
 			}		
 		});
+		addToBasket.setToolTipText("Press to add the selected item to your basket");
 		
 		JButton returnButton = createReturnButton(buyFrame);
 		
@@ -241,13 +271,6 @@ public class SwingBuilder {
 		buyFrame.getContentPane().add(buyOptions, BorderLayout.NORTH);
 		buyFrame.getContentPane().add(storagePanel, BorderLayout.CENTER);
 		buyFrame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-		// Adding a action listener to the add to basket button
-		addToBasket.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JLabel addedMessage = new JLabel("Items have been added!");
-				buyFrame.getContentPane().add(addedMessage);
-			}
-		});
 		
 		buyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		buyFrame.setResizable(false);
@@ -299,6 +322,7 @@ public class SwingBuilder {
 				buildIndexFrame();
 			}
 		});
+		returnButton.setToolTipText("Press to return to the index page");
 		
 		return returnButton;
 	}
@@ -312,6 +336,7 @@ public class SwingBuilder {
 		JPanel showBasketPanel = new JPanel();
 		
 		JTextArea basketContents = new JTextArea(basket.printOutBasket(), 20, 15);
+		JScrollPane scroll = new JScrollPane(basketContents);
 		basketContents.setEditable(false);
 		JButton checkout = new JButton("Checkout");
 		JButton returnToIndex = createReturnButton(showBasketFrame);
@@ -320,9 +345,15 @@ public class SwingBuilder {
 		checkout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(showBasketFrame, "Printing receipt, Thank you for shopping");
+				try {
+					basket.printReceipt();
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(showBasketFrame, "Problem with file name!");
+				}
 				showBasketFrame.dispose();
 			}
 		});
+		checkout.setToolTipText("Press to checkout with your current basket");
 		
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -332,11 +363,17 @@ public class SwingBuilder {
 				} 
 				catch (EmptyBasketException e1) {
 					JOptionPane.showMessageDialog(showBasketFrame, "Your basket is empty");
+					buildIndexFrame();
+				}
+				catch (ArrayIndexOutOfBoundsException e2) {
+					JOptionPane.showMessageDialog(showBasketFrame, "Your basket is empty");
+					buildIndexFrame();
 				}
 			}
 		});
+		remove.setToolTipText("Press to remove an item or all items from your basket");
 		
-		showBasketPanel.add(basketContents);
+		showBasketPanel.add(scroll);
 		showBasketPanel.add(checkout);
 		showBasketPanel.add(returnToIndex);
 		showBasketPanel.add(remove);
@@ -345,7 +382,7 @@ public class SwingBuilder {
 		showBasketFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		showBasketFrame.setVisible(true);
 		showBasketFrame.setResizable(false);
-		showBasketFrame.setSize(260, 400);
+		showBasketFrame.setSize(260, 420);
 		
 		return showBasketFrame;
 	}
@@ -371,7 +408,7 @@ public class SwingBuilder {
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					// Removes the selected option in the removeOptions JComboBox
+					// SATISFIES ASSESSMENT CRITERIA 1.4
 					basket.removeFromBasket(basket.findProduct(removeOptions.getSelectedItem().toString()));
 				}
 				catch (ProductDoesNotExistException e1) {
@@ -383,6 +420,8 @@ public class SwingBuilder {
 				}
 			}
 		});
+		remove.setToolTipText("Press to remove the selected item");
+		
 		// Adding a action listener for the remove all button 
 		removeAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -391,16 +430,54 @@ public class SwingBuilder {
 				buildShowBasketFrame();
 			}
 		});
+		removeAll.setToolTipText("Press to remove all items from your basket");
 		
 		removeFromBasketPanel.add(removeOptions);
 		removeFromBasketPanel.add(remove);
 		removeFromBasketPanel.add(removeAll);
+		removeFromBasketPanel.add(createReturnButton(removeFromBasketFrame));
 		
 		removeFromBasketFrame.getContentPane().add(removeFromBasketPanel);
 		removeFromBasketFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		removeFromBasketFrame.setVisible(true);
-		removeFromBasketFrame.setSize(280, 140);
+		removeFromBasketFrame.setSize(320, 140);
 		
 		return removeFromBasketFrame;
+	}
+	
+	private JFrame buildHelpFrame() throws IOException {
+		helpFrame = new JFrame("User Guide");
+		
+		FileReader fr = new FileReader("UserGuide");
+		BufferedReader br = new BufferedReader(fr);
+		
+		JPanel helpPanel = new JPanel();
+		helpPanel.setLayout(new BorderLayout());
+		
+		JTextArea userGuide = new JTextArea();
+		userGuide.setEditable(false);
+		
+		for (int i = 1; i <= 29; i++) {
+			userGuide.append(br.readLine() + "\n");
+		}
+		
+		JScrollPane scrollUserGuide = new JScrollPane(userGuide);
+		
+		JButton closeHelp = new JButton("Close");
+		closeHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				helpFrame.dispose();
+			}
+		});
+		
+		helpPanel.add(scrollUserGuide, BorderLayout.CENTER);
+		helpPanel.add(closeHelp, BorderLayout.SOUTH);
+		
+		helpFrame.setVisible(true);
+		helpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		helpFrame.getContentPane().add(helpPanel);
+		helpFrame.setSize(600, 600);
+		
+		return helpFrame;
 	}
 }
