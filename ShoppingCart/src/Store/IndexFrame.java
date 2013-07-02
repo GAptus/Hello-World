@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 public class IndexFrame extends JFrame{
 	
-	private Store store = new StoreImpl();
+	private Store store = new DefaultStore();
 	private CheckoutBasket basket = store.getBasketInstance();
 	
 	private BuyFrame buyFrame = new BuyFrame(this, store, basket);

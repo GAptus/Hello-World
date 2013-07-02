@@ -50,7 +50,7 @@ public class DisplayFrame extends JFrame {
 		returnButton = new JButton("Return to Index");
 		
 		for (Product p : selectedProducts) {
-			JTextArea productDescription = new JTextArea(p.getDescription(), 10, 15);
+			JTextArea productDescription = new JTextArea(p.getDescription(), 10, 25);
 			JScrollPane productScroll = new JScrollPane(productDescription);
 			
 			productDescription.setEditable(false);

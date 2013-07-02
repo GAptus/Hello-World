@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 //SATISFIES ASSESSMENT CRITERIA 1.1
-public class StoreImpl implements Store {
+public class DefaultStore implements Store {
 	// SATISFIES ASSESSMENT CRITERIA 1.2
 	// private variables of StoreImpl and Basket to incorporate the singleton design pattern
 	//, meaning only a single instance of either class is allowed to exist at one given time
@@ -14,7 +14,7 @@ public class StoreImpl implements Store {
 	private ArrayList<Product> productsForSale = new ArrayList<Product>();
 	DecimalFormat myFormatter = new DecimalFormat("####.00");
 	// Constructor so when StoreImpl is instantiated it will call method stock() and will fill productsForSale array, private to implement the singleton design pattern
-	public StoreImpl() {
+	public DefaultStore() {
 		stock();
 	}
 	
@@ -311,21 +311,30 @@ public class StoreImpl implements Store {
 		}
 		
 		public void printReceipt() throws IOException {
-			FileWriter f1 = new FileWriter("Receipt.txt");
-			
-			double total = 0.0;
-			
-			for (Product p : basketList) {
-				total += p.getProductPrice();
-				String description = p.getProductName() + "\t" + p.getProductPrice();
-				char[] tempChars = new char[description.length()];
-				tempChars = description.toCharArray();
+			FileWriter f1 = null;
+			try {
+				f1 = new FileWriter("Receipt");
+
+				double total = 0.0;
+				
+				for (Product p : basketList) {
+					StringBuilder stringBuilder = new StringBuilder();
+					total += p.getProductPrice();
+					stringBuilder.append(p.getProductName());
+					stringBuilder.append("\t");
+					stringBuilder.append(p.getProductPrice());
+					stringBuilder.append("\n");
+					char[] tempChars = new char[stringBuilder.length()];
+					tempChars = stringBuilder.toString().toCharArray();
+					f1.write(tempChars);
+				}
+				String shoppingTotal = "Total: " + total;
+				char[] tempChars = new char[shoppingTotal.length()];
+				tempChars = shoppingTotal.toCharArray();
 				f1.write(tempChars);
-			}
-			String shoppingTotal = "Total: " + total;
-			char[] tempChars = new char[shoppingTotal.length()];
-			tempChars = shoppingTotal.toCharArray();
-			f1.write(tempChars);
+			} finally {
+				f1.close();
+			}			
 		}
 	}
 

@@ -134,6 +134,7 @@ public class BuyFrame extends JFrame {
 		
 		returnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				buyOptions.setSelectedIndex(0);
 				setVisible(false);
 				indexFrame.setVisible(true);
 			}
