@@ -37,7 +37,7 @@ public class SwingBuilder {
 	private Store store = StoreImpl.getStore();
 	// SATISFIES ASSESSMENT CRITERIA 2.2 - Polymorphism & Encapsulation
 	private CheckoutBasket basket = store.getBasketInstance();
-	
+
 	// Initialises global JFrame objects used in various buildFrame methods
 	private JFrame welcomeFrame;
 	private JFrame indexFrame;
