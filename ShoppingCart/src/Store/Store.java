@@ -1,15 +1,20 @@
 package Store;
 
-import java.util.ArrayList;
-//SATISFIES ASSESSMENT CRITERIA 1.1
+import java.util.List;
+/**
+ * @author giacomo
+ *
+ * Interface to provide methods through which to access the DefaultStore class.
+ *
+ */
 public interface Store {
 	
-	public ArrayList<Product> findProductsByOption(String option) throws ProductDoesNotExistException;
+    public List<Product> findProductsByOption(ProductType productType);
 	
 	public Product findProduct(String name) throws ProductDoesNotExistException;
 	
 	public Product searchByProductNumber(String number) throws ProductDoesNotExistException;
 	
-	public CheckoutBasket getBasketInstance();
+	public CheckoutBasket getShoppingBasket();
 	
 }

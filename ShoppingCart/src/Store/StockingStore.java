@@ -5,82 +5,77 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-// SATISFIES ASSESSMENT CRITERIA 1.1
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 
+ * @author giacomo
+ * Class StockingStore
+ * Responsible for reading from files and populating a Map with List's containing the different Product Types mapped to a ProductType enum
+ * 
+ */
 public class StockingStore {
-	public ArrayList<Product> readItemsFromFile(String filename, String productType) {
-		FileReader fr = null;
-		BufferedReader br = null;
-		ArrayList<Product> linesFromFile = new ArrayList<Product>();
-		
-		try {
-			fr = new FileReader(filename);
-			br = new BufferedReader(fr);
-		} 
-		catch (FileNotFoundException e) {
-			System.err.println("The file name entered does not exist or is in the wrong directory");
-		}
-		finally {
-			try {
-				String lineRead;
-				while ((lineRead = br.readLine()) != null) {
-					String[] parts = lineRead.split(",");
 
-					try {
-						linesFromFile.add(createProducts(parts, productType));
-					} 
-					catch (ProductDoesNotExistException e) {
-						System.err.println("The type of Product entered is either incorrect or does not exist!");
-					}
+    private Map<ProductType, List<Product>> productTypeToSelectionOfProductsMap = new HashMap<ProductType, List<Product>>();
+    private Map<ProductType, ProductFactory<? extends Product>> productTypeToProductFactoryMap = 
+                                new HashMap<ProductType, ProductFactory<? extends Product>>();
 
-				}
-				
-				br.close();
-				fr.close();
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}			
-		}
-		return linesFromFile;
-	}
-	
-	private Product createProducts(String[] p, String productType) throws ProductDoesNotExistException {
-		if (productType.equals("Desktop")) {
-			try {
-				return new Desktop(p[0], p[1], Double.parseDouble(p[2]), p[3], Integer.parseInt(p[4])
-							, p[5], p[6], Integer.parseInt(p[7]), Integer.parseInt(p[7]));
-			} catch (NumberFormatException e) {
-				System.err.println("Problem converting numbers in Desktop file! Check the numbers!");
-			}
-		}
-		if (productType.equals("Laptop")) {
-			try {
-				return new Laptop(p[0], p[1], Double.parseDouble(p[2]), Double.parseDouble(p[3]), Double.parseDouble(p[4]), Integer.parseInt(p[5]), Integer.parseInt(p[6]), p[7]);
-			} catch (NumberFormatException e) {
-				System.err.println("Problem with the Laptop file! Check the numbers!");
-			}
-		}
-		if (productType.equals("Monitor")) {
-			try {
-				return new Monitor(p[0], p[1], Double.parseDouble(p[2]), Double.parseDouble(p[3]), p[4], p[5], Integer.parseInt(p[6]));
-			} catch (NumberFormatException e) {
-				System.err.println("Problem with Monitor file! Check the numbers!");
-			}
-		}
-		if (productType.equals("Mouse"))  {
-			try {
-				return new Mouse(p[0], p[1],Double.parseDouble(p[2]), Integer.parseInt(p[3]), Integer.parseInt(p[4]), p[5]);
-			} catch (NumberFormatException e) {
-				System.err.println("Problem with Mouse file! Check the numbers!");
-			}
-		}
-		if (productType.equals("Keyboard")) {
-			try {
-				return new Keyboard(p[0], p[1], Double.parseDouble(p[2]), p[3], p[4]);
-			} catch (NumberFormatException e) {
-				System.err.println("Problem with Keyboard file! Check the numbers!");
-			}
-		}
-		throw new ProductDoesNotExistException();
-	}
+    /**
+     * no-args constructor, responsible for mapping Factories to a ProductType enum and to then populate another 
+     * Map with Lists containing the all products for that enum type
+     */
+    public StockingStore() {
+        productTypeToProductFactoryMap.put(ProductType.DESKTOP, new DesktopFactory());
+        productTypeToProductFactoryMap.put(ProductType.LAPTOP, new LaptopFactory());
+        productTypeToProductFactoryMap.put(ProductType.MONITOR, new MonitorFactory());
+        productTypeToProductFactoryMap.put(ProductType.KEYBOARD, new KeyboardFactory());
+        productTypeToProductFactoryMap.put(ProductType.MOUSE, new MouseFactory());
+        
+        for (ProductType productType : ProductType.values()) {
+            productTypeToSelectionOfProductsMap.put(productType, readItemsFromFile(productType));
+        }
+    }
+
+    /**
+     * Method readItemsFromFile
+     * Method to read data from a file and construct an ArrayList containing Products produced from that information
+     * 
+     * @param productType
+     * Enum containing the type of product to be read from file.
+     * @return ArrayList containing Porducts which have been created from the file information
+     */
+    private ArrayList<Product> readItemsFromFile(ProductType productType) {
+        BufferedReader br = null;
+        ArrayList<Product> resultantProducts = new ArrayList<Product>();
+        try {
+            br = new BufferedReader(new FileReader(productType.getDisplayValue()));
+            String lineRead;
+            while ((lineRead = br.readLine()) != null) {
+                String[] productSpecifications = lineRead.split(",");
+                resultantProducts.add(productTypeToProductFactoryMap.get(productType)
+                                                                    .createProduct(productSpecifications));
+            }
+        }
+        catch (FileNotFoundException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            try {
+                br.close();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return resultantProducts;
+    }
+    
+    Map<ProductType, List<Product>> getProductTypesToSelectionOfProductsMap() {
+        return productTypeToSelectionOfProductsMap;
+    }
 }

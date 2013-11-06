@@ -1,8 +1,14 @@
 package Store;
 
 import java.io.IOException;
+import java.util.List;
 
-//SATISFIES ASSESSMENT CRITERIA 1.1
+/**
+ * Interface CheckoutBasket
+ * interface through which you interact with Basket.class
+ * @author giacomo
+ *
+ */
 public interface CheckoutBasket {
 	
 	public void addToBasket(Product p, int quantity);
@@ -13,7 +19,7 @@ public interface CheckoutBasket {
 	
 	public String printOutBasket();
 	
-	public String[] productInBasket() throws EmptyBasketException;
+	public List<String> productInBasket() throws EmptyBasketException;
 	
 	public void emptyBasket();
 	
